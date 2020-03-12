@@ -1,0 +1,27 @@
+{
+  "author": "Rocky",
+  "dependencies": {
+    "@cloudant/cloudant": "^3.0.2",
+    "bcryptjs": "^2.4.3",
+    "cfenv": "^1.0.x",
+    "express": "^4.15.x"
+  },
+  "description": "rockyPython",
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "license": "ISC",
+  "main": "server.js",
+  "name": "rockynode",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/7Rocky/bicimad-api-nodejs"
+  },
+  "scripts": {
+    "dev": "nodemon server.js",
+    "prestart": "npm install --production",
+    "start": "node server.js"
+  },
+  "version": "0.1.1"
+}

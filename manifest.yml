@@ -1,0 +1,5 @@
+---
+applications:
+- name: rockyPython
+  random-route: true
+  memory: 256M
