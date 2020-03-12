@@ -4,11 +4,19 @@
     "@cloudant/cloudant": "^3.0.2",
     "bcryptjs": "^2.4.3",
     "cfenv": "^1.0.x",
-    "express": "^4.15.x"
+    "connect": "^3.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.15.x",
+    "js-yaml": "^3.3.0",
+    "oas3-tools": "^2.0.2"
   },
   "description": "rockyPython",
   "devDependencies": {
     "nodemon": "^2.0.2"
+  },
+  "engines": {
+    "node": "12.16.1",
+    "npm": "6.13.4"
   },
   "license": "ISC",
   "main": "server.js",
