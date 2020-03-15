@@ -41,11 +41,11 @@ module.exports = class BicimadController {
   }
 
   async getStationsOrigin() {
-    getStations(ORIGIN);
+    return await getStations(ORIGIN);
   }
 
   async getStationsDestination() {
-    getStations(DESTINATION);
+    return await getStations(DESTINATION);
   }
 
   async getMovements(date) {
