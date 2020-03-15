@@ -20,7 +20,7 @@
   },
   "license": "ISC",
   "main": "server.js",
-  "name": "rockyPython",
+  "name": "rockypython",
   "private": false,
   "repository": {
     "type": "git",
