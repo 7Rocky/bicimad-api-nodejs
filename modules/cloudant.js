@@ -1,5 +1,7 @@
 const Cloudant = require('@cloudant/cloudant');
-const appEnv = require('cfenv').getAppEnv(process.env.NODE_ENV === 'production' ? { } : { vcap: require('./vcap-local.json') });
+const appEnv = require('cfenv').getAppEnv(
+  process.env.NODE_ENV === 'production' ? { } : { vcap: require('./vcap-local.json') }
+);
 
 let cloudant;
 

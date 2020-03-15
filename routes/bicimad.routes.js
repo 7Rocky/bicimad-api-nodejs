@@ -10,7 +10,7 @@ router.get(`${endpoint}/dates`, async (req, res) => {
   try {
     res.json(await bicimadCtrl.getNumberOfDates());
   } catch (error) {
-    res.json({ env: process.env, error });
+    res.json({ error });
   }
 });
 

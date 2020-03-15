@@ -37,7 +37,7 @@ module.exports = class BicimadController {
 
       res.json({ dates: { count, first, last } });
     } catch (error) {
-      res.status(500).json({ message: 'Something unexpected happened' });
+      res.json({ message: error });
     }
   }
 
