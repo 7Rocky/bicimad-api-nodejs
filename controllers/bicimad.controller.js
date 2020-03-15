@@ -59,7 +59,7 @@ module.exports = class BicimadController {
       return await bicimad.find({
         'Fecha': date,
         'idunplug_station': from
-      }, FIELDS));
+      }, FIELDS);
     } catch (error) {
       return { error };
     }
