@@ -2,6 +2,7 @@ const Cloudant = require('../modules/cloudant');
 const { getDateFromMilliseconds, sortDates } = require('../helpers/dates.helpers');
 
 const bicimad = new Cloudant('bicimad');
+console.log(process.env);
 
 const ORIGIN = { name: 'origin', column: 'idunplug_station' };
 const DESTINATION = { name: 'destination', column: 'idplug_station' };
