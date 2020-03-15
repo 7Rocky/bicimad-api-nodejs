@@ -7,7 +7,7 @@ console.log(process.env);
 const ORIGIN = { name: 'origin', column: 'idunplug_station' };
 const DESTINATION = { name: 'destination', column: 'idplug_station' };
 const FIELDS = ['Fecha', 'idunplug_base', 'idplug_base', 'idunplug_station', 'idplug_station', 
-  'ageRange', 'user_type', 'travel_time', 'Fichero']
+  'ageRange', 'user_type', 'travel_time', 'Fichero'];
 
 const getStations = async (req, res, kind) => {
   try {

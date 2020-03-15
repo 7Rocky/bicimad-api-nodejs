@@ -7,7 +7,11 @@ const router = Router();
 const bicimadCtrl = new BicimadController();
 
 router.get(`${endpoint}/dates`, async (req, res) => {
-  res.json(await bicimadCtrl.getNumberOfDates());
+  try {
+    res.json(await bicimadCtrl.getNumberOfDates());
+  } catch (error) {
+    res.json({ env: process.env, error });
+  }
 });
 
 router.get(`${endpoint}/stations/origin`, async (req, res) => {
