@@ -5,6 +5,8 @@ const bicimad = new Cloudant('bicimad');
 
 const ORIGIN = { name: 'origin', column: 'idunplug_station' };
 const DESTINATION = { name: 'destination', column: 'idplug_station' };
+const FIELDS = ['Fecha', 'idunplug_base', 'idplug_base', 'idunplug_station', 'idplug_station', 
+  'ageRange', 'user_type', 'travel_time', 'Fichero']
 
 const getStations = async (req, res, kind) => {
   try {
@@ -32,7 +34,7 @@ module.exports = class BicimadController {
       const first = getDateFromMilliseconds(dates[0]);
       const last = getDateFromMilliseconds(dates[count - 1]);
 
-      res.json({ count, first, last });
+      res.json({ dates: { count, first, last } });
     } catch (error) {
       res.status(500).json({ message: 'Something unexpected happened' });
     }
@@ -46,68 +48,49 @@ module.exports = class BicimadController {
     getStations(req, res, DESTINATION);
   }
 
-  async getMovements(req, res) {
-    const { date } = req.query;
+  async getMovements(date) {
+    return await bicimad.find({
+      'Fecha': date
+    }, FIELDS);
+  }
+
+  async getMovementsFrom(date, from) {
+    res.json(await bicimad.find({
+      'Fecha': date,
+      'idunplug_station': from
+    }, FIELDS));
+  }
+
+  async getMovementsTo(date, to) {
+    try {
+      return await bicimad.find({
+        'Fecha': date,
+        'idplug_station': to
+      }, FIELDS);
+    } catch (error) {
+      return { message: 'Something unexpected happened' };
+    }
+  }
+
+  async getMovementsFromTo(date, from, to) {
     try {
       res.json(await bicimad.find({
-        'Fecha': { '$eq': date }
+        'Fecha': date,
+        'idunplug_station': from,
+        'idplug_station': to
       }));
     } catch (error) {
       res.status(500).json({ message: 'Something unexpected happened' });
     }
   }
 
-  async getMovementsFrom(req, res) {
-    const { date, from } = req.query;
-
+  async getMovementsFromToIn(date, from, to, _in, gt) {
     try {
       res.json(await bicimad.find({
-        'Fecha': { '$eq': date },
-        'idunplug_station': { '$eq': Number(from) }
-      }));
-    } catch (error) {
-      res.status(500).json({ message: 'Something unexpected happened' });
-    }
-  }
-
-  async getMovementsTo(req, res) {
-    const { date, to } = req.query;
-
-    try {
-      res.json(await bicimad.find({
-        'Fecha': { '$eq': date },
-        'idplug_station': { '$eq': Number(to) }
-      }));
-    } catch (error) {
-      res.status(500).json({ message: 'Something unexpected happened' });
-    }
-  }
-
-  async getMovementsFromTo(req, res) {
-    const { date, from, to } = req.query;
-
-    try {
-      res.json(await bicimad.find({
-        'Fecha': { '$eq': date },
-        'idunplug_station': { '$eq': Number(from) },
-        'idplug_station': { '$eq': Number(to) }
-      }));
-    } catch (error) {
-      res.status(500).json({ message: 'Something unexpected happened' });
-    }
-  }
-
-  async getMovementsFromToIn(req, res) {
-    const { date, from, to } = req.query;
-    const timeSelector = req.query.gt === 'true' ? 
-      { '$gt': Number(req.query.in) } : { '$lt': Number(req.query.in) };
-
-    try {
-      res.json(await bicimad.find({
-        'Fecha': { '$eq': date },
-        'idunplug_station': { '$eq': Number(from) },
-        'idplug_station': { '$eq': Number(to) },
-        'travel_time': timeSelector
+        'Fecha': date,
+        'idunplug_station': from,
+        'idplug_station': to,
+        'travel_time': gt === 'true' ? { '$gt': _in } : { '$lt': _in }
       }));
     } catch (error) {
       res.status(500).json({ message: 'Something unexpected happened' });

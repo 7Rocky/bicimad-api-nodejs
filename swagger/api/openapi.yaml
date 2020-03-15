@@ -1,0 +1,154 @@
+openapi: 3.0.0
+info:
+  title: Bicimad
+  description: Bicimad API
+  contact:
+    email: rockygitt@gmail.com
+  version: 1.0-oas3
+servers:
+- url: https://rockyPython.mybluemix.net/bicimad-api/v1.0
+paths:
+  /dates:
+    get:
+      tags:
+      - developers
+      summary: Get number of dates
+      description: |
+        Obtain the number of available dates and also the first and last dates
+      operationId: datesGET
+      responses:
+        "200":
+          description: OK
+      x-swagger-router-controller: Developers
+  /stations/origin:
+    get:
+      tags:
+      - developers
+      summary: Get station identifiers
+      description: |
+        Obtain all the origin station identifiers
+      operationId: stationsOriginGET
+      responses:
+        "200":
+          description: OK
+      x-swagger-router-controller: Developers
+  /stations/destination:
+    get:
+      tags:
+      - developers
+      summary: Get station identifiers
+      description: |
+        Obtain all the destination station identifiers
+      operationId: stationsDestinationGET
+      responses:
+        "200":
+          description: OK
+      x-swagger-router-controller: Developers
+  /movements:
+    get:
+      tags:
+      - developers
+      summary: Get movements information
+      description: |
+        Obtain all movements within a certain day. Specify origin and/or destination stations if necessary
+      operationId: movementsGET
+      parameters:
+      - name: date
+        in: query
+        description: Date when the movement was released
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date
+      - name: from
+        in: query
+        description: Origin station
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: to
+        in: query
+        description: Destination station
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-swagger-router-controller: Developers
+  /movements/time:
+    get:
+      tags:
+      - developers
+      summary: Get movements information
+      description: |
+        Obtain all movements within a certain day. Specify origin and/or destination stations and a travel time if necessary
+      operationId: movementsTimeGET
+      parameters:
+      - name: date
+        in: query
+        description: Date when the movement was released
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date
+      - name: from
+        in: query
+        description: Origin station
+        required: true
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: to
+        in: query
+        description: Destination station
+        required: true
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: in
+        in: query
+        description: Travel time in seconds
+        required: true
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: gt
+        in: query
+        description: Travel time greater than the value specified
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-swagger-router-controller: Developers
+components: {}
