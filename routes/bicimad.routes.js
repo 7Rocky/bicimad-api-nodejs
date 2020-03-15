@@ -47,4 +47,6 @@ router.get(`${endpoint}/movements/time`, (req, res) => {
   }
 });
 
+router.get(`${endpoint}/prueba`, (req, res) => res.json({ message: 'prueba' }));
+
 module.exports = router;
