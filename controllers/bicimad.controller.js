@@ -2,14 +2,13 @@ const Cloudant = require('../modules/cloudant');
 const { getDateFromMilliseconds, sortDates } = require('../helpers/dates.helpers');
 
 const bicimad = new Cloudant('bicimad');
-console.log(process.env);
 
 const ORIGIN = { name: 'origin', column: 'idunplug_station' };
 const DESTINATION = { name: 'destination', column: 'idplug_station' };
 const FIELDS = ['Fecha', 'idunplug_base', 'idplug_base', 'idunplug_station', 'idplug_station', 
   'ageRange', 'user_type', 'travel_time', 'Fichero'];
 
-const getStations = async (req, res, kind) => {
+const getStations = async (kind) => {
   try {
     const data = await bicimad.find({ }, [kind.column]);
     const ids = data.map(item => item[kind.column]);
@@ -17,15 +16,15 @@ const getStations = async (req, res, kind) => {
 
     stations[kind.name] = [... new Set(ids)].sort((a, b) => a - b);
 
-    res.json({ stations });
+    return { stations };
   } catch (error) {
-    res.status(500).json({ message: 'Something unexpected happened' });
+    return { error };
   }
 };
 
 module.exports = class BicimadController {
 
-  async getNumberOfDates(req, res) {
+  async getNumberOfDates() {
     try {
       const data = await bicimad.find({ }, ['Fecha']);
       const repeated_dates = data.map(item => item['Fecha']);
@@ -35,18 +34,18 @@ module.exports = class BicimadController {
       const first = getDateFromMilliseconds(dates[0]);
       const last = getDateFromMilliseconds(dates[count - 1]);
 
-      res.json({ dates: { count, first, last } });
+      return { dates: { count, first, last } };
     } catch (error) {
-      res.json({ message: error });
+      return { error };
     }
   }
 
-  async getStationsOrigin(req, res) {
-    getStations(req, res, ORIGIN);
+  async getStationsOrigin() {
+    getStations(ORIGIN);
   }
 
-  async getStationsDestination(req, res) {
-    getStations(req, res, DESTINATION);
+  async getStationsDestination() {
+    getStations(DESTINATION);
   }
 
   async getMovements(date) {
@@ -56,10 +55,14 @@ module.exports = class BicimadController {
   }
 
   async getMovementsFrom(date, from) {
-    res.json(await bicimad.find({
-      'Fecha': date,
-      'idunplug_station': from
-    }, FIELDS));
+    try {
+      return await bicimad.find({
+        'Fecha': date,
+        'idunplug_station': from
+      }, FIELDS));
+    } catch (error) {
+      return { error };
+    }
   }
 
   async getMovementsTo(date, to) {
@@ -69,32 +72,32 @@ module.exports = class BicimadController {
         'idplug_station': to
       }, FIELDS);
     } catch (error) {
-      return { message: 'Something unexpected happened' };
+      return { error };
     }
   }
 
   async getMovementsFromTo(date, from, to) {
     try {
-      res.json(await bicimad.find({
+      return await bicimad.find({
         'Fecha': date,
         'idunplug_station': from,
         'idplug_station': to
-      }));
+      });
     } catch (error) {
-      res.status(500).json({ message: 'Something unexpected happened' });
+      return { error };
     }
   }
 
   async getMovementsFromToIn(date, from, to, _in, gt) {
     try {
-      res.json(await bicimad.find({
+      return await bicimad.find({
         'Fecha': date,
         'idunplug_station': from,
         'idplug_station': to,
         'travel_time': gt === 'true' ? { '$gt': _in } : { '$lt': _in }
-      }));
+      });
     } catch (error) {
-      res.status(500).json({ message: 'Something unexpected happened' });
+      return { error };
     }
   }
 
