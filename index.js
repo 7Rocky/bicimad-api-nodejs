@@ -18,8 +18,6 @@ const swaggerUi = new swagger_ui.SwaggerUI(swaggerDoc);
 
 app = express();
 
-app.disable('x-powered-by');
-
 app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
@@ -37,6 +35,8 @@ new express_openapi_validator.OpenApiValidator({ apiSpec: definitionPath })
       res.status(err.status || 500).json({ message: err.message, errors: err.errors });
     });
 });
+
+app.disable('x-powered-by');
 
 app.listen(port, () => {
   console.log('App running at http://localhost:' + port);

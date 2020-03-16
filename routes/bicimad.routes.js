@@ -104,4 +104,14 @@ router.post(`${endpoint}/new`, verifyAuth, async (req, res) => {
   res.status(document.error ? 400 : 201).json(document);
 });
 
+router.put(`${endpoint}/update`, async (req, res) => {
+  const document = await bicimadCtrl.update(req.body);
+
+  if (document.error) {
+    res.status(document.status).json({ error: document.error });
+  }
+
+  res.status(200).json(document);
+});
+
 module.exports = router;
