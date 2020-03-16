@@ -49,6 +49,7 @@ module.exports = class BicimadController {
       const data = await bicimad.find({ }, ['Fecha']);
       console.log(data);
       const repeated_dates = data.map(item => item['Fecha']);
+      console.log(repeated_dates);
       const dates = sortDates(repeated_dates);
 
       const count = dates.length;

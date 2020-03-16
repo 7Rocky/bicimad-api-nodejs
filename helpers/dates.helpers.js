@@ -12,6 +12,7 @@ const padWithZero = number => `${number < 10 ? `0${number}` : number}`;
 const sortDates = dates => {
   return [... new Set(dates)]
     .map(item => {
+      console.log(item);
       const numbers = item.split('/');
       return new Date(numbers[2], numbers[1] - 1, numbers[0]).getTime();
     })
