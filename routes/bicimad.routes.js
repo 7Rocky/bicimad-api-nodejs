@@ -68,7 +68,7 @@ router.get(`${endpoint}/movements`, async (req, res) => {
   }
 });
 
-router.get(`${endpoint}/movements/time`, (req, res) => {
+router.get(`${endpoint}/movements/time`, async (req, res) => {
   const { date, from, to, gt } = req.query;
   const _in = Number(req.query.in);
 
