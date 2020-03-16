@@ -1,14 +1,14 @@
 const crypto = require('crypto');
 const { Router } = require('express');
-const NodeCache = require( "node-cache" );
+const NodeCache = require('node-cache');
 
 const BicimadController = require('../controllers/bicimad.controller');
 
 const endpoint = '/bicimad-api/v1.0';
 
-const router = Router();
-const myCache = new NodeCache({ stdTTL: 60, checkperiod: 120 });
 const bicimadCtrl = new BicimadController();
+const myCache = new NodeCache({ checkperiod: 120, stdTTL: 60 });
+const router = Router();
 
 router.get(`${endpoint}/dates`, async (req, res) => {
   try {

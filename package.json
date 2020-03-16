@@ -2,7 +2,6 @@
   "author": "Rocky",
   "dependencies": {
     "@cloudant/cloudant": "^4.2.4",
-    "bcryptjs": "^2.4.3",
     "cfenv": "^1.0.x",
     "cors": "^2.8.5",
     "express": "^4.15.x",
