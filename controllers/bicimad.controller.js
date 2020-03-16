@@ -1,13 +1,22 @@
 const Cloudant = require('../modules/cloudant');
-const { getDateFromMilliseconds, sortDates } = require('../helpers/dates.helpers');
+const { getDateFromMilliseconds, sortDates, verifyDate } = require('../helpers/dates.helpers');
 
 const bicimad = new Cloudant('bicimad');
 const bicimad_admin = new Cloudant('bicimad_admin');
 
 const ORIGIN = { name: 'origin', column: 'idunplug_station' };
 const DESTINATION = { name: 'destination', column: 'idplug_station' };
-const FIELDS = ['Fecha', 'idunplug_base', 'idplug_base', 'idunplug_station', 'idplug_station', 
-  'ageRange', 'user_type', 'travel_time', 'Fichero'];
+const FIELDS = [
+  'Fecha',
+  'Fichero',
+  'ageRange',
+  'idplug_base',
+  'idplug_station',
+  'idunplug_base',
+  'idunplug_station',
+  'travel_time',
+  'user_type'
+];
 
 const getStations = async kind => {
   try {
@@ -20,6 +29,17 @@ const getStations = async kind => {
   } catch (error) {
     return { error };
   }
+};
+
+const verifyDoc = doc => {
+  return verifyDate(doc.Fecha.trim()) &&
+    doc.idunplug_station >= 1 &&
+    doc.idplug_station >= 1 &&
+    doc.idunplug_base >= 1 && doc.idunplug_base <= 30 &&
+    doc.idplug_base >= 1 && doc.idplug_base <= 30 &&
+    doc.ageRange >= 1 && doc.ageRange <= 6 &&
+    doc.user_type >= 1 && doc.user_type <= 3 &&
+    doc.travel_time >= 0;
 };
 
 module.exports = class BicimadController {
@@ -103,11 +123,14 @@ module.exports = class BicimadController {
 
   async new(document) {
     document['Fichero'] = 0;
+    const keys = Object.keys(document).sort();
 
-    for (const field in document) {
-      if (FIELDS.indexOf(field) === -1) {
-        return;
-      }
+    if (keys.toString() !== FIELDS.toString()) {
+      return { error: 'Some fields are invalid. Please, check the API documentation' };
+    }
+
+    if (!verifyDoc(document)){
+      return { error: 'Some values are invalid. Please, check the API documentation' };;
     }
 
     try {

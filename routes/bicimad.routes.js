@@ -34,7 +34,7 @@ router.get(`${endpoint}/stations/:kind`, async (req, res) => {
     }
 
     myCache.set(kind, stations);
-    res.json({ stations });
+    res.json(stations);
   } catch (error) {
     res.json({ error });
   }
@@ -84,10 +84,12 @@ router.get(`${endpoint}/movements/time`, async (req, res) => {
 
 const verifyAuth = async (req, res, next) => {
   const auth = req.headers.authorization;
+  console.log(auth);
 
   if (auth) {
     const credentials = Buffer.from(auth.split(' ')[1], 'base64').toString().split(':');
     const hash = crypto.createHash('sha256').update(credentials[1]).digest('hex');
+    console.log(credentials);
 
     if (hash === await bicimadCtrl.getUsersHash(credentials[0])) {
       return next();
@@ -98,15 +100,8 @@ const verifyAuth = async (req, res, next) => {
 };
 
 router.post(`${endpoint}/new`, verifyAuth, async (req, res) => {
-  if (req.body) {
-    const document = await bicimadCtrl.new(req.body);
-
-    if (document) {
-       return res.status(201).json(document);
-    }
-  }
-
-  res.status(400).json({ error: 'Some fields are invalid' });
+  const document = await bicimadCtrl.new(req.body);
+  res.status(document.error ? 400 : 201).json(document);
 });
 
 module.exports = router;

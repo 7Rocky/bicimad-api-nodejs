@@ -18,7 +18,22 @@ const sortDates = dates => {
     .sort((a, b) => a - b);
 };
 
+const verifyDate = date => {
+  const firtsCheck = date.match(/((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})/) &&
+    !date.startsWith('31/04') && !date.startsWith('31/06') &&
+    !date.startsWith('31/09') && !date.startsWith('31/11') &&
+    !date.startsWith('31/02') && !date.startsWith('30/02');
+  let secondCheck = true;
+
+  if (date.startsWith('29/02')) {
+    secondCheck = date.substring(8, 10) % 4 === 0;
+  }
+
+  return firtsCheck && secondCheck;
+};
+
 module.exports = {
   getDateFromMilliseconds,
-  sortDates
+  sortDates,
+  verifyDate
 };
