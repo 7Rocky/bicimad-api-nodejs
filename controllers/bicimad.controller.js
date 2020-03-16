@@ -28,10 +28,6 @@ const getStations = async kind => {
 
 module.exports = class BicimadController {
 
-  async view() {
-    await bicimad.view();
-  }
-
   async getNumberOfDates() {
     try {
       const data = await bicimad.find({ }, ['Fecha']);
