@@ -1,13 +1,12 @@
 {
   "author": "Rocky",
   "dependencies": {
-    "@cloudant/cloudant": "^3.0.2",
+    "@cloudant/cloudant": "^4.2.4",
     "bcryptjs": "^2.4.3",
     "cfenv": "^1.0.x",
-    "connect": "^3.2.0",
     "cors": "^2.8.5",
     "express": "^4.15.x",
-    "js-yaml": "^3.3.0",
+    "node-cache": "^5.1.0",
     "oas3-tools": "^2.0.2"
   },
   "description": "rockyPython",

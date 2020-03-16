@@ -1,25 +1,44 @@
+const crypto = require('crypto');
 const { Router } = require('express');
+const NodeCache = require( "node-cache" );
+
 const BicimadController = require('../controllers/bicimad.controller');
 
 const endpoint = '/bicimad-api/v1.0';
 
 const router = Router();
+const myCache = new NodeCache({ stdTTL: 60, checkperiod: 120 });
 const bicimadCtrl = new BicimadController();
 
 router.get(`${endpoint}/dates`, async (req, res) => {
   try {
-    res.json(await bicimadCtrl.getNumberOfDates());
+    await bicimadCtrl.view();
+    const dates = myCache.get('dates') || await bicimadCtrl.getNumberOfDates();
+    myCache.set('dates', dates);
+    res.json({ dates });
   } catch (error) {
     res.json({ error });
   }
 });
 
-router.get(`${endpoint}/stations/origin`, async (req, res) => {
-  res.json(await bicimadCtrl.getStationsOrigin());
-});
+router.get(`${endpoint}/stations/:kind`, async (req, res) => {
+  const kind = req.params.kind;
+  let stations = { };
 
-router.get(`${endpoint}/stations/destination`, async (req, res) => {
-  res.json(await bicimadCtrl.getStationsDestination());
+  try {
+    if (kind === 'origin') {
+      stations = myCache.get(kind) || await bicimadCtrl.getStationsOrigin();
+    } else if (kind === 'destination') {
+      stations = myCache.get(kind) || await bicimadCtrl.getStationsDestination();
+    } else {
+      return res.status(404).json({ message: 'Not found' });
+    }
+
+    myCache.set(kind, stations);
+    res.json({ stations });
+  } catch (error) {
+    res.json({ error });
+  }
 });
 
 router.get(`${endpoint}/movements`, async (req, res) => {
@@ -52,5 +71,25 @@ router.get(`${endpoint}/movements/time`, (req, res) => {
 });
 
 router.get(`${endpoint}/prueba`, (req, res) => res.json({ message: 'prueba' }));
+
+const verifyAuth = async (req, res, next) => {
+  const credentials = Buffer.from(req.headers.authorization.split(' ')[1], 'base64').toString().split(':');
+  const hash = crypto.createHash('sha256').update(credentials[1]).digest('hex');
+
+  if (hash === await bicimadCtrl.getUsersHash(credentials[0])) {
+    next();
+  } else {
+    res.status(403).json({ error: 'No valid credentials' });
+  }
+};
+
+router.post(`${endpoint}/new`, verifyAuth, async (req, res) => {
+  const document = await bicimadCtrl.new(req.body);
+  if (document) {
+    res.status(201).json(document);
+  } else {
+    res.status(400).json({ error: 'Some fields are invalid' });
+  }
+});
 
 module.exports = router;
