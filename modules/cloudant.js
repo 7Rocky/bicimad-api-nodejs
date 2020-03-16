@@ -1,21 +1,21 @@
-const Cloudant = require('@cloudant/cloudant');
-const appEnv = require('cfenv').getAppEnv(
-  process.env.NODE_ENV === 'production' ? { } : { vcap: require('./vcap-local.json') }
-);
-
-let cloudant;
-
-if (appEnv.services.cloudantNoSQLDB) {
-  cloudant = Cloudant(appEnv.services.cloudantNoSQLDB[0].credentials);
-} else if (process.env.CLOUDANT_URL) {
-  cloudant = Cloudant(process.env.CLOUDANT_URL);
-}
-
 module.exports = class Cloudant {
 
   constructor(dbName) {
+    const Cloudant = require('@cloudant/cloudant');
+    const appEnv = require('cfenv').getAppEnv(
+      process.env.NODE_ENV === 'production' ? { } : { vcap: require('./vcap-local.json') }
+    );
+
     this.dbName = dbName;
     this.db = null;
+
+    let cloudant;
+
+    if (appEnv.services.cloudantNoSQLDB) {
+      cloudant = Cloudant(appEnv.services.cloudantNoSQLDB[0].credentials);
+    } else if (process.env.CLOUDANT_URL) {
+      cloudant = Cloudant(process.env.CLOUDANT_URL);
+    }
 
     if (cloudant) {
       cloudant.db.create(dbName)
