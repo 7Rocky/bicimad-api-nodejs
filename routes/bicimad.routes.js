@@ -83,14 +83,18 @@ router.get(`${endpoint}/movements/time`, async (req, res) => {
 });
 
 const verifyAuth = async (req, res, next) => {
-  const credentials = Buffer.from(req.headers.authorization.split(' ')[1], 'base64').toString().split(':');
-  const hash = crypto.createHash('sha256').update(credentials[1]).digest('hex');
+  const auth = req.headers.authorization;
 
-  if (hash === await bicimadCtrl.getUsersHash(credentials[0])) {
-    next();
-  } else {
-    res.status(403).json({ error: 'No valid credentials' });
+  if (auth) {
+    const credentials = Buffer.from(auth.split(' ')[1], 'base64').toString().split(':');
+    const hash = crypto.createHash('sha256').update(credentials[1]).digest('hex');
+
+    if (hash === await bicimadCtrl.getUsersHash(credentials[0])) {
+      return next();
+    }
   }
+
+  return res.status(403).json({ error: 'No valid credentials' });
 };
 
 router.post(`${endpoint}/new`, verifyAuth, async (req, res) => {
