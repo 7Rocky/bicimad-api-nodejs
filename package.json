@@ -18,7 +18,7 @@
     "npm": "6.13.4"
   },
   "license": "ISC",
-  "main": "server.js",
+  "main": "index.js",
   "name": "rockypython",
   "private": false,
   "repository": {
@@ -26,9 +26,9 @@
     "url": "https://github.com/7Rocky/bicimad-api-nodejs"
   },
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon index.js",
     "prestart": "npm install --production",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "version": "0.1.1"
 }
