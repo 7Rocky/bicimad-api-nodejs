@@ -11,15 +11,11 @@ const FIELDS = ['Fecha', 'idunplug_base', 'idplug_base', 'idunplug_station', 'id
 
 const getStations = async kind => {
   try {
-    console.time('query');
     const data = await bicimad.find({ }, [kind.column]);
-    console.timeEnd('query');
-    console.time('process');
     const ids = data.map(item => item[kind.column]);
     const stations = { };
 
     stations[kind.name] = [... new Set(ids)].sort((a, b) => a - b);
-    console.timeEnd('process');
     return stations;
   } catch (error) {
     return { error };

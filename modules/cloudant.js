@@ -24,6 +24,8 @@ module.exports = class Cloudant {
 
       this.db = cloudant.db.use(dbName);
     }
+
+    console.log(this.db);
   }
 
   insert(doc) {
