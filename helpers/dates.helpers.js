@@ -19,25 +19,23 @@ const sortDates = dates => {
 };
 
 const verifyDate = date => {
-  if (!date || !date.match(/((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})/)) {
+  if (!date || !date.match(/^((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})$/)) {
     return false;
   }
 
-  const firstCheck = !date.startsWith('31/04') && !date.startsWith('31/06') &&
-    !date.startsWith('31/09') && !date.startsWith('31/11') &&
-    !date.startsWith('31/02') && !date.startsWith('30/02');
+  const firstCheck = date.startsWith('31/04') || date.startsWith('31/06') ||
+    date.startsWith('31/09') || date.startsWith('31/11') ||
+    date.startsWith('31/02') || date.startsWith('30/02');
 
-  if (!firstCheck) {
+  if (firstCheck) {
     return false;
   }
 
-  let secondCheck = true;
-
-  if (date.startsWith('29/02')) {
-    secondCheck = date.substring(8, 10) % 4 === 0;
+  if (date.startsWith('29/02') && date.substring(8, 10) % 4 !== 0) {
+    return false;
   }
 
-  return secondCheck;
+  return true;
 };
 
 module.exports = {

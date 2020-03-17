@@ -152,22 +152,32 @@ module.exports = class BicimadController {
   }
 
   async update(document) {
-    try {
-      const { travel_time } = document; 
-      delete document['travel_time'];
+    const { travel_time } = document; 
 
-      const existingDocuments = await bicimad.find(document);
-      const existingDocument = existingDocuments[0];
-      delete existingDocument['travel_time'];
+    if (!isNaN(Number(travel_time))) {
+      try {
+        delete document['travel_time'];
 
-      const finalDocument = await bicimad.insert({ travel_time, ...existingDocument });
+        const existingDocuments = await bicimad.find(document);
 
-      delete finalDocument['_id'];
-      delete finalDocument['_rev'];
-      return finalDocument;
-    } catch (error) {
-      console.log(error);
+        if (existingDocuments.length) {
+          const existingDocument = existingDocuments[0];
+          delete existingDocument['travel_time'];
+
+          const finalDocument = await bicimad.insert({ travel_time, ...existingDocument });
+
+          delete finalDocument['_id'];
+          delete finalDocument['_rev'];
+          return finalDocument;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      return { error: 'Some fields are invalid', status: 400 };
     }
+
+    return { error: 'Document not found in the database', status: 404 };
   }
 
   async getUsersHash(username) {
