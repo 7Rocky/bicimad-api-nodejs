@@ -157,7 +157,6 @@ module.exports = class BicimadController {
     if (!isNaN(Number(travel_time)) && Number(travel_time) >= 0) {
       try {
         delete document['travel_time'];
-
         const existingDocuments = await bicimad.find(document);
 
         if (existingDocuments.length) {
