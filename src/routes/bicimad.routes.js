@@ -15,7 +15,7 @@ router.get(`${endpoint}/dates`, async (req, res) => {
   try {
     const dates = myCache.get('dates') || await bicimadCtrl.getNumberOfDates();
     myCache.set('dates', dates);
-    res.json({ dates });
+    res.json(dates);
   } catch (error) {
     res.status(500);
   }

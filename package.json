@@ -10,24 +10,27 @@
   },
   "description": "rockyPython",
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "mocha": "^7.1.0",
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
   },
   "engines": {
     "node": "12.16.1",
     "npm": "6.13.4"
   },
   "license": "ISC",
-  "main": "index.js",
+  "main": "src/index.js",
   "name": "rockypython",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/7Rocky/bicimad-api-nodejs"
+    "url": "https://github.com/7Rocky/bicimad-api-nodejs.git"
   },
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon src/index.js",
     "prestart": "npm install --production",
-    "start": "node index.js"
+    "start": "node src/index.js",
+    "test": "mocha"
   },
   "version": "0.1.1"
 }

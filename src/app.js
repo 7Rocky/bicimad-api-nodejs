@@ -8,8 +8,6 @@ const swagger_parameters = require('oas3-tools/dist/middleware/swagger.parameter
 const swagger_router = require('oas3-tools/dist/middleware/swagger.router');
 const swagger_ui = require('oas3-tools/dist/middleware/swagger.ui');
 
-const port = process.env.PORT || 3000;
-
 const definitionPath = `${__dirname}/swagger/api/openapi.yaml`;
 const routingOptions = { controllers: `${__dirname}/swagger/controllers` };
 const spec = fs.readFileSync(definitionPath, 'utf8');
@@ -38,7 +36,4 @@ new express_openapi_validator.OpenApiValidator({ apiSpec: definitionPath })
 
 app.disable('x-powered-by');
 
-app.listen(port, () => {
-  console.log('App running at http://localhost:' + port);
-  console.log(`Swagger-ui is available on http://localhost:${port}/docs`);
-});
+module.exports = app;

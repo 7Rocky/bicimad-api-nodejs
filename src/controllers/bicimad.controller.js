@@ -79,7 +79,7 @@ module.exports = class BicimadController {
   async getMovements(date) {
     try {
       return await bicimad.find({
-        'Fecha': Number(date)
+        'Fecha': date
       }, FIELDS);
     } catch (error) {
       console.log(error);
@@ -89,7 +89,7 @@ module.exports = class BicimadController {
   async getMovementsFrom(date, from) {
     try {
       return await bicimad.find({
-        'Fecha': Number(date),
+        'Fecha': date,
         'idunplug_station': Number(from)
       }, FIELDS);
     } catch (error) {
@@ -100,7 +100,7 @@ module.exports = class BicimadController {
   async getMovementsTo(date, to) {
     try {
       return await bicimad.find({
-        'Fecha': Number(date),
+        'Fecha': date,
         'idplug_station': Number(to)
       }, FIELDS);
     } catch (error) {
@@ -156,18 +156,33 @@ module.exports = class BicimadController {
 
     if (!isNaN(Number(travel_time)) && Number(travel_time) >= 0) {
       try {
-        delete document['travel_time'];
-        const existingDocuments = await bicimad.find(document);
+        const existingDocuments = await bicimad.find({
+          'Fecha': document.Fecha,
+          'idunplug_station': document.idunplug_station,
+          'idplug_station': document.idplug_station,
+        });
 
         if (existingDocuments.length) {
-          const existingDocument = existingDocuments[0];
-          delete existingDocument['travel_time'];
+          let existsDocument = false;
 
-          const finalDocument = await bicimad.insert({ travel_time, ...existingDocument });
+          for (const doc of existingDocuments) {
+            if (doc.Fichero === document.Fichero && doc.idunplug_base === document.idunplug_base &&
+                doc.idplug_base === document.idplug_base && doc.user_type === document.user_type &&
+                doc.ageRange === document.ageRange) {
 
-          delete finalDocument['_id'];
-          delete finalDocument['_rev'];
-          return finalDocument;
+              existsDocument = true;
+              document = doc;
+            }
+          }
+
+          if (existsDocument) {
+            document.travel_time = travel_time;
+            const finalDocument = await bicimad.insert(document);
+
+            delete finalDocument['_id'];
+            delete finalDocument['_rev'];
+            return finalDocument;
+          }
         }
       } catch (error) {
         console.log(error);
