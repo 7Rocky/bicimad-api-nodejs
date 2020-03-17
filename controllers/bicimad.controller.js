@@ -154,7 +154,7 @@ module.exports = class BicimadController {
   async update(document) {
     const { travel_time } = document; 
 
-    if (!isNaN(Number(travel_time))) {
+    if (!isNaN(Number(travel_time)) && Number(travel_time) >= 0) {
       try {
         delete document['travel_time'];
 
