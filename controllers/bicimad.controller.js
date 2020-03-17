@@ -25,9 +25,9 @@ const getStations = async kind => {
     const stations = { };
 
     stations[kind.name] = [... new Set(ids)].sort((a, b) => a - b);
-    return stations;
+    return { stations };
   } catch (error) {
-    return { error };
+    console.log(error);
   }
 };
 
@@ -47,9 +47,7 @@ module.exports = class BicimadController {
   async getNumberOfDates() {
     try {
       const data = await bicimad.find({ }, ['Fecha']);
-      console.log(data);
       const repeated_dates = data.map(item => item['Fecha']);
-      console.log(repeated_dates);
       const dates = sortDates(repeated_dates);
 
       const count = dates.length;
@@ -58,43 +56,55 @@ module.exports = class BicimadController {
 
       return { count, first, last };
     } catch (error) {
-      return { error };
+      console.log(error);
     }
   }
 
   async getStationsOrigin() {
-    return await getStations(ORIGIN);
+    try {
+      return await getStations(ORIGIN);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getStationsDestination() {
-    return await getStations(DESTINATION);
+    try {
+      return await getStations(DESTINATION);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getMovements(date) {
-    return await bicimad.find({
-      'Fecha': date
-    }, FIELDS);
+    try {
+      return await bicimad.find({
+        'Fecha': Number(date)
+      }, FIELDS);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getMovementsFrom(date, from) {
     try {
       return await bicimad.find({
-        'Fecha': date,
-        'idunplug_station': from
+        'Fecha': Number(date),
+        'idunplug_station': Number(from)
       }, FIELDS);
     } catch (error) {
-      return { error };
+      console.log(error);
     }
   }
 
   async getMovementsTo(date, to) {
     try {
       return await bicimad.find({
-        'Fecha': date,
-        'idplug_station': to
+        'Fecha': Number(date),
+        'idplug_station': Number(to)
       }, FIELDS);
     } catch (error) {
-      return { error };
+      console.log(error);
     }
   }
 
@@ -102,11 +112,11 @@ module.exports = class BicimadController {
     try {
       return await bicimad.find({
         'Fecha': date,
-        'idunplug_station': from,
-        'idplug_station': to
-      });
+        'idunplug_station': Number(from),
+        'idplug_station': Number(to)
+      }, FIELDS);
     } catch (error) {
-      return { error };
+      console.log(error);
     }
   }
 
@@ -114,12 +124,12 @@ module.exports = class BicimadController {
     try {
       return await bicimad.find({
         'Fecha': date,
-        'idunplug_station': from,
-        'idplug_station': to,
+        'idunplug_station': Number(from),
+        'idplug_station': Number(to),
         'travel_time': gt === 'true' ? { '$gt': _in } : { '$lt': _in }
-      });
+      }, FIELDS);
     } catch (error) {
-      return { error };
+      console.log(error);
     }
   }
 
@@ -127,12 +137,8 @@ module.exports = class BicimadController {
     document['Fichero'] = 0;
     const keys = Object.keys(document).sort();
 
-    if (keys.toString() !== FIELDS.toString()) {
-      return { error: 'Some fields are invalid. Please, check the API documentation' };
-    }
-
-    if (!verifyDoc(document)){
-      return { error: 'Some values are invalid. Please, check the API documentation' };;
+    if (keys.toString() !== FIELDS.toString() || !verifyDoc(document)){
+      return { error: 'Some fields/values are invalid. Please, check the API documentation' };;
     }
 
     try {
@@ -145,9 +151,28 @@ module.exports = class BicimadController {
     }
   }
 
+  async update(document) {
+    try {
+      const { travel_time } = document; 
+      delete document['travel_time'];
+
+      const existingDocuments = await bicimad.find(document);
+      const existingDocument = existingDocuments[0];
+      delete existingDocument['travel_time'];
+
+      const finalDocument = await bicimad.insert({ travel_time, ...existingDocument });
+
+      delete finalDocument['_id'];
+      delete finalDocument['_rev'];
+      return finalDocument;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getUsersHash(username) {
     try {
-      const hashes = await bicimad_admin.find({ username }, [ 'hash' ]);
+      const hashes = await bicimad_admin.find({ username }, ['hash']);
 
       if (hashes.length === 1) {
         return hashes[0].hash;

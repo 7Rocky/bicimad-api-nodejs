@@ -1,7 +1,7 @@
-var ResponsePayload = (code, payload) => {
+const ResponsePayload = (code, payload) => {
   this.code = code;
   this.payload = payload;
-}
+};
 
 exports.respondWithCode = (code, payload) => new ResponsePayload(code, payload);
 
@@ -36,4 +36,4 @@ const writeJson = exports.writeJson = (response, arg1, arg2) => {
 
   response.writeHead(code, { 'Content-Type': 'application/json' });
   response.end(payload);
-}
+};

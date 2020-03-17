@@ -1,154 +1,538 @@
-openapi: 3.0.0
+openapi: '3.0.0'
 info:
   title: Bicimad
   description: Bicimad API
   contact:
+    name: Rocky
     email: rockygitt@gmail.com
-  version: 1.0-oas3
+  version: 'v1.0'
+  license:
+    name: ISC
+    url: 'https://opensource.org/licenses/ISC'
 servers:
-- url: https://rockyPython.mybluemix.net/bicimad-api/v1.0
+- url: 'https://rockyPython.mybluemix.net/bicimad-api/v1.0'
+tags:
+- name: admins
+  description: Secured Admin-only calls
 paths:
   /dates:
     get:
-      tags:
-      - developers
       summary: Get number of dates
-      description: |
-        Obtain the number of available dates and also the first and last dates
-      operationId: datesGET
+      description: Obtain the number of available dates and also the first and last dates
       responses:
         "200":
           description: OK
-      x-swagger-router-controller: Developers
-  /stations/origin:
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  count: 27
+                  first: '31/05/2020'
+                  last: '26/06/2019'
+                properties:
+                  count:
+                    type: number
+                  first:
+                    type: string
+                    format: 'DD/MM/YYYY'
+                  last:
+                    type: string
+                    format: 'DD/MM/YYYY'
+  /stations/{kind}:
     get:
-      tags:
-      - developers
-      summary: Get station identifiers
-      description: |
-        Obtain all the origin station identifiers
-      operationId: stationsOriginGET
+      parameters:
+      - name: kind
+        in: path
+        description: Kind of station
+        required: true
+        schema:
+          type: string
+          enum:
+          - origin
+          - destination
+      summary: Get stations identifiers
+      description: Obtain all the origin/destination stations identifiers
       responses:
         "200":
           description: OK
-      x-swagger-router-controller: Developers
-  /stations/destination:
-    get:
-      tags:
-      - developers
-      summary: Get station identifiers
-      description: |
-        Obtain all the destination station identifiers
-      operationId: stationsDestinationGET
-      responses:
-        "200":
-          description: OK
-      x-swagger-router-controller: Developers
+          content:
+            application/json:
+              schema:
+                example:
+                  stations:
+                    origin:
+                    - 1
+                    - 2
+                    - 3
+                oneOf:
+                - type: object
+                  properties:
+                    stations:
+                      type: object
+                      properties:
+                        origin:
+                          type: array
+                          items:
+                            type: number
+                            minimum: 1
+                - type: object
+                  properties:
+                    stations:
+                      type: object
+                      properties:
+                        destination:
+                          type: array
+                          items:
+                            type: number
+                            minimum: 1
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Not Found
+                type: object
+                properties:
+                  error:
+                    type: string
   /movements:
     get:
-      tags:
-      - developers
       summary: Get movements information
-      description: |
-        Obtain all movements within a certain day. Specify origin and/or destination stations if necessary
-      operationId: movementsGET
+      description: Obtain all movements within a certain day. Specify origin and/or destination stations if necessary
       parameters:
-      - name: date
-        in: query
-        description: Date when the movement was released
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          format: date
-      - name: from
-        in: query
-        description: Origin station
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-      - name: to
-        in: query
-        description: Destination station
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
+      - $ref: '#/components/parameters/date'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
       responses:
         "200":
-          description: OK
+          $ref: '#/components/responses/bicimadArray'
         "400":
           description: Bad Request
-      x-swagger-router-controller: Developers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: Date parameter is invalid
   /movements/time:
     get:
-      tags:
-      - developers
       summary: Get movements information
-      description: |
-        Obtain all movements within a certain day. Specify origin and/or destination stations and a travel time if necessary
-      operationId: movementsTimeGET
+      description: Obtain all movements within a certain day. Specify origin and destination stations and a travel time. Use *gt* parameter to search for movements lasting more or less than the specified travel time
       parameters:
-      - name: date
-        in: query
-        description: Date when the movement was released
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          format: date
-      - name: from
-        in: query
-        description: Origin station
-        required: true
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-      - name: to
-        in: query
-        description: Destination station
-        required: true
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
+      - $ref: '#/components/parameters/date'
+      - $ref: '#/components/parameters/from_time'
+      - $ref: '#/components/parameters/to_time'
       - name: in
         in: query
         description: Travel time in seconds
         required: true
         style: form
-        explode: true
         schema:
+          example: 1000
           minimum: 0
-          type: integer
-          format: int32
+          type: number
       - name: gt
         in: query
         description: Travel time greater than the value specified
         required: false
         style: form
-        explode: true
         schema:
+          example: false
           type: boolean
           default: false
       responses:
         "200":
-          description: OK
+          $ref: '#/components/responses/bicimadArray'
         "400":
           description: Bad Request
-      x-swagger-router-controller: Developers
-components: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: Some parameters are wrong
+  /new:
+    post:
+      security:
+      - basicAuth: []
+      tags:
+      - admins
+      summary: Adds a new document to the database
+      description: Adds a new document to the database, only if the user is authenticated correctly. There is no need to specify *Fichero* field, it will be set to zero anyway
+      requestBody:
+        description: Document to add
+        content:
+          application/json:
+            schema:
+              example:
+                Fecha: '03/06/2019'
+                ageRange: 5
+                idplug_base: 23
+                idplug_station: 154
+                idunplug_base: 17
+                idunplug_station: 160
+                travel_time: 763
+                user_type: 1
+              type: object
+              required:
+              - Fecha
+              - ageRange
+              - idplug_base
+              - idplug_station
+              - idunplug_base
+              - idunplug_station
+              - travel_time
+              - user_type
+              properties:
+                Fecha:
+                  type: string
+                  format: 'DD/MM/YYY'
+                ageRange:
+                  type: number
+                  minimum: 0
+                  maximum: 6
+                idplug_base:
+                  type: number
+                  minimum: 1
+                  maximum: 30
+                idplug_station:
+                  type: number
+                  minimum: 1
+                idunplug_base:
+                  type: string
+                  minimum: 1
+                  maximum: 30
+                idunplug_station:
+                  type: number
+                  minimum: 1
+                user_type:
+                  type: number
+                  minimum: 1
+                  maximum: 3
+                travel_time:
+                  type: number
+                  minimum: 0
+      responses:
+        '201':
+          $ref: '#/components/responses/bicimadDocPost'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Some fields/values are invalid. Please, check the API documentation
+                type: object
+                properties:
+                  error:
+                    type: string
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Invalid credentials
+                type: object
+                properties:
+                  error:
+                    type: string
+  /time/update:
+    put:
+      summary: Update travel time
+      description: Update travel time in seconds for a specific document
+      requestBody:
+        description: Document to update
+        content:
+          application/json:
+            schema:
+              example:
+                Fecha: '03/06/2019'
+                Fichero: 201906
+                ageRange: 5
+                idplug_base: 23
+                idplug_station: 154
+                idunplug_base: 17
+                idunplug_station: 160
+                travel_time: 763
+                user_type: 1
+              type: object
+              required:
+              - Fecha
+              - Fichero
+              - ageRange
+              - idplug_base
+              - idplug_station
+              - idunplug_base
+              - idunplug_station
+              - travel_time
+              - user_type
+              properties:
+                Fecha:
+                  type: string
+                  format: 'DD/MM/YYY'
+                Fichero:
+                  type: number
+                  minimum: 0
+                ageRange:
+                  type: number
+                  minimum: 0
+                  maximum: 6
+                idplug_base:
+                  type: number
+                  minimum: 1
+                  maximum: 30
+                idplug_station:
+                  type: number
+                  minimum: 1
+                idunplug_base:
+                  type: string
+                  minimum: 1
+                  maximum: 30
+                idunplug_station:
+                  type: number
+                  minimum: 1
+                user_type:
+                  type: number
+                  minimum: 1
+                  maximum: 3
+                travel_time:
+                  type: number
+                  minimum: 0
+      responses:
+        '200':
+          $ref: '#/components/responses/bicimadDocPut'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Some fields are missing
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                error: Document not found in the database
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  parameters:
+    date:
+      name: date
+      in: query
+      description: Date when the movement was released
+      required: true
+      style: form
+      schema:
+        example: '03/06/2019'
+        type: string
+        format: 'DD/MM/YYYY'
+    from:
+      name: from
+      in: query
+      description: Origin station
+      required: false
+      style: form
+      schema:
+        example: 160
+        minimum: 1
+        type: number
+    to:
+      name: to
+      in: query
+      description: Destination station
+      required: false
+      style: form
+      schema:
+        example: 154
+        minimum: 1
+        type: number
+    from_time:
+      name: from
+      in: query
+      description: Origin station
+      required: true
+      style: form
+      schema:
+        example: 160
+        minimum: 1
+        type: number
+    to_time:
+      name: to
+      in: query
+      description: Destination station
+      required: true
+      style: form
+      schema:
+        example: 154
+        minimum: 1
+        type: number
+  responses:
+    bicimadArray:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              example:
+                Fecha: '03/06/2019'
+                Fichero: 201906
+                ageRange: 5
+                idplug_base: 23
+                idplug_station: 154
+                idunplug_base: 17
+                idunplug_station: 160
+                travel_time: 763
+                user_type: 1
+              properties:
+                Fecha:
+                  type: string
+                  format: DD/MM/YYY
+                Fichero:
+                  type: number
+                  minimum: 0
+                ageRange:
+                  type: number
+                  minimum: 0
+                  maximum: 6
+                idplug_base:
+                  type: number
+                  minimum: 1
+                  maximum: 30
+                idplug_station:
+                  type: number
+                  minimum: 1
+                idunplug_base:
+                  type: string
+                  minimum: 1
+                  maximum: 30
+                idunplug_station:
+                  type: number
+                  minimum: 1
+                user_type:
+                  type: number
+                  minimum: 1
+                  maximum: 3
+                travel_time:
+                  type: number
+                  minimum: 0
+    bicimadDocPost:
+      description: Created
+      content:
+        application/json:
+          schema:
+            example:
+              Fecha: '03/06/2019'
+              Fichero: 201906
+              ageRange: 5
+              idplug_base: 23
+              idplug_station: 154
+              idunplug_base: 17
+              idunplug_station: 160
+              travel_time: 763
+              user_type: 1
+            type: object
+            properties:
+              Fecha:
+                type: string
+                format: 'DD/MM/YYY'
+              Fichero:
+                type: number
+                minimum: 0
+              ageRange:
+                type: number
+                minimum: 0
+                maximum: 6
+              idplug_base:
+                type: number
+                minimum: 1
+                maximum: 30
+              idplug_station:
+                type: number
+                minimum: 1
+              idunplug_base:
+                type: string
+                minimum: 1
+                maximum: 30
+              idunplug_station:
+                type: number
+                minimum: 1
+              user_type:
+                type: number
+                minimum: 1
+                maximum: 3
+              travel_time:
+                type: number
+                minimum: 0
+    bicimadDocPut:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              Fecha: '03/06/2019'
+              Fichero: 201906
+              ageRange: 5
+              idplug_base: 23
+              idplug_station: 154
+              idunplug_base: 17
+              idunplug_station: 160
+              travel_time: 763
+              user_type: 1
+            properties:
+              Fecha:
+                type: string
+                format: 'DD/MM/YYY'
+              Fichero:
+                type: number
+                minimum: 0
+              ageRange:
+                type: number
+                minimum: 0
+                maximum: 6
+              idplug_base:
+                type: number
+                minimum: 1
+                maximum: 30
+              idplug_station:
+                type: number
+                minimum: 1
+              idunplug_base:
+                type: string
+                minimum: 1
+                maximum: 30
+              idunplug_station:
+                type: number
+                minimum: 1
+              user_type:
+                type: number
+                minimum: 1
+                maximum: 3
+              travel_time:
+                type: number
+                minimum: 0
+      

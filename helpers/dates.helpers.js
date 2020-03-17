@@ -12,7 +12,6 @@ const padWithZero = number => `${number < 10 ? `0${number}` : number}`;
 const sortDates = dates => {
   return [... new Set(dates)]
     .map(item => {
-      console.log(item);
       const numbers = item.split('/');
       return new Date(numbers[2], numbers[1] - 1, numbers[0]).getTime();
     })
@@ -20,17 +19,25 @@ const sortDates = dates => {
 };
 
 const verifyDate = date => {
-  const firtsCheck = date.match(/((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})/) &&
-    !date.startsWith('31/04') && !date.startsWith('31/06') &&
+  if (!date || !date.match(/((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})/)) {
+    return false;
+  }
+
+  const firstCheck = !date.startsWith('31/04') && !date.startsWith('31/06') &&
     !date.startsWith('31/09') && !date.startsWith('31/11') &&
     !date.startsWith('31/02') && !date.startsWith('30/02');
+
+  if (!firstCheck) {
+    return false;
+  }
+
   let secondCheck = true;
 
   if (date.startsWith('29/02')) {
     secondCheck = date.substring(8, 10) % 4 === 0;
   }
 
-  return firtsCheck && secondCheck;
+  return secondCheck;
 };
 
 module.exports = {
