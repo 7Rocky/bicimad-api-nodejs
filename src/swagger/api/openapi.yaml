@@ -173,7 +173,7 @@ paths:
           application/json:
             schema:
               example:
-                Fecha: '03/06/2019'
+                Fecha: '20/03/2019'
                 ageRange: 5
                 idplug_base: 23
                 idplug_station: 154
@@ -255,8 +255,8 @@ paths:
           application/json:
             schema:
               example:
-                Fecha: '03/06/2019'
-                Fichero: 201906
+                Fecha: '20/03/2020'
+                Fichero: 0
                 ageRange: 5
                 idplug_base: 23
                 idplug_station: 154
