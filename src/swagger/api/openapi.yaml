@@ -118,7 +118,7 @@ paths:
                   error:
                     type: string
                 example:
-                  error: Date parameter is invalid
+                  error: Some parameters are wrong
   /movements/time:
     get:
       summary: Get movements information
@@ -234,8 +234,8 @@ paths:
                 properties:
                   error:
                     type: string
-        '403':
-          description: Forbidden
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -315,7 +315,7 @@ paths:
           content:
             application/json:
               example:
-                error: Some fields are missing
+                error: Some fields are invalid
               schema:
                 type: object
                 properties:
