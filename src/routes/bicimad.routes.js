@@ -54,14 +54,16 @@ router.get(`${endpoint}/movements`, async (req, res) => {
         movements = myCache.get(key) || await bicimadCtrl.getMovementsFrom(date, from);
       } else if (!from && to && to >= 1) {
         movements = myCache.get(key) || await bicimadCtrl.getMovementsTo(date, to);
-      } else {
+      } else if (!from && !to) {
         movements = myCache.get(key) || await bicimadCtrl.getMovements(date);
+      } else {
+        return res.status(400).json({ error: 'Some parameters are wrong' });
       }
 
       myCache.set(key, movements);
       res.json(movements);
     } else {
-      res.status(400).json({ error: 'Date parameter is invalid' });
+      res.status(400).json({ error: 'Some parameters are wrong' });
     }
   } catch (error) {
     res.status(500);
@@ -90,7 +92,7 @@ const verifyAuth = async (req, res, next) => {
   const auth = req.headers.authorization;
 
   try {
-    if (auth) {
+    if (auth && auth.startsWith('Basic ')) {
       const credentials = Buffer.from(auth.split(' ')[1], 'base64').toString().split(':');
       const hash = crypto.createHash('sha256').update(credentials[1]).digest('hex');
 
@@ -99,7 +101,7 @@ const verifyAuth = async (req, res, next) => {
       }
     }
 
-    return res.status(403).json({ error: 'Invalid credentials' });
+    return res.status(401).json({ error: 'Invalid credentials' });
   } catch (error) {
     res.status(500);
   }
@@ -120,7 +122,7 @@ router.put(`${endpoint}/time/update`, async (req, res) => {
     const document = await bicimadCtrl.update(req.body);
 
     if (document.error) {
-      res.status(document.status).json({ error: document.error });
+      return res.status(document.status).json({ error: document.error });
     }
 
     myCache.flushAll();

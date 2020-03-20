@@ -32,12 +32,16 @@ const getStations = async kind => {
 };
 
 const verifyDoc = doc => {
-  return verifyDate(doc.Fecha.trim()) &&
+  const keys = Object.keys(doc).sort();
+
+  return keys.toString() === FIELDS.toString() &&
+    doc.Fecha && verifyDate(doc.Fecha.trim()) &&
+    doc.Fichero >= 0 &&
     doc.idunplug_station >= 1 &&
     doc.idplug_station >= 1 &&
     doc.idunplug_base >= 1 && doc.idunplug_base <= 30 &&
     doc.idplug_base >= 1 && doc.idplug_base <= 30 &&
-    doc.ageRange >= 1 && doc.ageRange <= 6 &&
+    doc.ageRange >= 0 && doc.ageRange <= 6 &&
     doc.user_type >= 1 && doc.user_type <= 3 &&
     doc.travel_time >= 0;
 };
@@ -135,9 +139,8 @@ module.exports = class BicimadController {
 
   async new(document) {
     document['Fichero'] = 0;
-    const keys = Object.keys(document).sort();
 
-    if (keys.toString() !== FIELDS.toString() || !verifyDoc(document)){
+    if (!verifyDoc(document)){
       return { error: 'Some fields/values are invalid. Please, check the API documentation' };;
     }
 
@@ -154,7 +157,7 @@ module.exports = class BicimadController {
   async update(document) {
     const { travel_time } = document; 
 
-    if (!isNaN(Number(travel_time)) && Number(travel_time) >= 0) {
+    if (!isNaN(Number(travel_time)) && Number(travel_time) >= 0 && verifyDoc(document)) {
       try {
         const existingDocuments = await bicimad.find({
           'Fecha': document.Fecha,
@@ -198,7 +201,7 @@ module.exports = class BicimadController {
     try {
       const hashes = await bicimad_admin.find({ username }, ['hash']);
 
-      if (hashes.length === 1) {
+      if (hashes && hashes.length === 1) {
         return hashes[0].hash;
       }
 
