@@ -32,7 +32,7 @@ paths:
                   last: '26/06/2019'
                 properties:
                   count:
-                    type: number
+                    type: integer
                   first:
                     type: string
                     format: 'DD/MM/YYYY'
@@ -74,7 +74,7 @@ paths:
                         origin:
                           type: array
                           items:
-                            type: number
+                            type: integer
                             minimum: 1
                 - type: object
                   properties:
@@ -84,7 +84,7 @@ paths:
                         destination:
                           type: array
                           items:
-                            type: number
+                            type: integer
                             minimum: 1
         "404":
           description: Not Found
@@ -100,7 +100,9 @@ paths:
   /movements:
     get:
       summary: Get movements information
-      description: Obtain all movements within a certain day. Specify origin and/or destination stations if necessary
+      description: |
+        Obtain all movements within a certain day. Specify
+        origin and/or destination stations if necessary
       parameters:
       - $ref: '#/components/parameters/date'
       - $ref: '#/components/parameters/from'
@@ -135,7 +137,7 @@ paths:
         schema:
           example: 1000
           minimum: 0
-          type: number
+          type: integer
       - name: gt
         in: query
         description: Travel time greater than the value specified
@@ -197,29 +199,29 @@ paths:
                   format: date
                   pattern: '^((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})$'
                 ageRange:
-                  type: number
+                  type: integer
                   minimum: 0
                   maximum: 6
                 idplug_base:
-                  type: number
+                  type: integer
                   minimum: 1
                   maximum: 30
                 idplug_station:
-                  type: number
+                  type: integer
                   minimum: 1
                 idunplug_base:
                   type: string
                   minimum: 1
                   maximum: 30
                 idunplug_station:
-                  type: number
+                  type: integer
                   minimum: 1
                 user_type:
-                  type: number
+                  type: integer
                   minimum: 1
                   maximum: 3
                 travel_time:
-                  type: number
+                  type: integer
                   minimum: 0
       responses:
         '201':
@@ -282,32 +284,32 @@ paths:
                   format: date
                   pattern: '^((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})$'
                 Fichero:
-                  type: number
+                  type: integer
                   minimum: 0
                 ageRange:
-                  type: number
+                  type: integer
                   minimum: 0
                   maximum: 6
                 idplug_base:
-                  type: number
+                  type: integer
                   minimum: 1
                   maximum: 30
                 idplug_station:
-                  type: number
+                  type: integer
                   minimum: 1
                 idunplug_base:
                   type: string
                   minimum: 1
                   maximum: 30
                 idunplug_station:
-                  type: number
+                  type: integer
                   minimum: 1
                 user_type:
-                  type: number
+                  type: integer
                   minimum: 1
                   maximum: 3
                 travel_time:
-                  type: number
+                  type: integer
                   minimum: 0
       responses:
         '200':
@@ -360,7 +362,7 @@ components:
       schema:
         example: 160
         minimum: 1
-        type: number
+        type: integer
     to:
       name: to
       in: query
@@ -370,7 +372,7 @@ components:
       schema:
         example: 154
         minimum: 1
-        type: number
+        type: integer
     from_time:
       name: from
       in: query
@@ -380,7 +382,7 @@ components:
       schema:
         example: 160
         minimum: 1
-        type: number
+        type: integer
     to_time:
       name: to
       in: query
@@ -390,7 +392,7 @@ components:
       schema:
         example: 154
         minimum: 1
-        type: number
+        type: integer
   responses:
     bicimadArray:
       description: OK
@@ -415,32 +417,32 @@ components:
                   type: string
                   format: 'DD/MM/YYYY'
                 Fichero:
-                  type: number
+                  type: integer
                   minimum: 0
                 ageRange:
-                  type: number
+                  type: integer
                   minimum: 0
                   maximum: 6
                 idplug_base:
-                  type: number
+                  type: integer
                   minimum: 1
                   maximum: 30
                 idplug_station:
-                  type: number
+                  type: integer
                   minimum: 1
                 idunplug_base:
                   type: string
                   minimum: 1
                   maximum: 30
                 idunplug_station:
-                  type: number
+                  type: integer
                   minimum: 1
                 user_type:
-                  type: number
+                  type: integer
                   minimum: 1
                   maximum: 3
                 travel_time:
-                  type: number
+                  type: integer
                   minimum: 0
     bicimadDocPost:
       description: Created
@@ -463,32 +465,32 @@ components:
                 type: string
                 format: 'DD/MM/YYYY'
               Fichero:
-                type: number
+                type: integer
                 minimum: 0
               ageRange:
-                type: number
+                type: integer
                 minimum: 0
                 maximum: 6
               idplug_base:
-                type: number
+                type: integer
                 minimum: 1
                 maximum: 30
               idplug_station:
-                type: number
+                type: integer
                 minimum: 1
               idunplug_base:
                 type: string
                 minimum: 1
                 maximum: 30
               idunplug_station:
-                type: number
+                type: integer
                 minimum: 1
               user_type:
-                type: number
+                type: integer
                 minimum: 1
                 maximum: 3
               travel_time:
-                type: number
+                type: integer
                 minimum: 0
     bicimadDocPut:
       description: OK
@@ -511,30 +513,30 @@ components:
                 type: string
                 format: 'DD/MM/YYYY'
               Fichero:
-                type: number
+                type: integer
                 minimum: 0
               ageRange:
-                type: number
+                type: integer
                 minimum: 0
                 maximum: 6
               idplug_base:
-                type: number
+                type: integer
                 minimum: 1
                 maximum: 30
               idplug_station:
-                type: number
+                type: integer
                 minimum: 1
               idunplug_base:
                 type: string
                 minimum: 1
                 maximum: 30
               idunplug_station:
-                type: number
+                type: integer
                 minimum: 1
               user_type:
-                type: number
+                type: integer
                 minimum: 1
                 maximum: 3
               travel_time:
-                type: number
+                type: integer
                 minimum: 0
