@@ -1,6 +1,6 @@
 ---
 applications:
-- memory: 256M
+- memory: 128M
   name: rockyPython
   routes:
   - route: rockyPython.mybluemix.net

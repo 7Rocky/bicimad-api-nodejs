@@ -15,12 +15,12 @@ tags:
 - name: admins
   description: Secured Admin-only calls
 paths:
-  '/dates':
+  /dates:
     get:
       summary: Get number of dates
       description: Obtain the number of available dates and also the first and last dates
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -39,7 +39,7 @@ paths:
                   last:
                     type: string
                     format: 'DD/MM/YYYY'
-  '/stations/{kind}':
+  /stations/{kind}:
     get:
       parameters:
       - name: kind
@@ -54,7 +54,7 @@ paths:
       summary: Get stations identifiers
       description: Obtain all the origin/destination stations identifiers
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -86,7 +86,7 @@ paths:
                           items:
                             type: number
                             minimum: 1
-        '404':
+        "404":
           description: Not Found
           content:
             application/json:
@@ -97,7 +97,7 @@ paths:
                 properties:
                   error:
                     type: string
-  '/movements':
+  /movements:
     get:
       summary: Get movements information
       description: Obtain all movements within a certain day. Specify origin and/or destination stations if necessary
@@ -106,9 +106,9 @@ paths:
       - $ref: '#/components/parameters/from'
       - $ref: '#/components/parameters/to'
       responses:
-        '200':
+        "200":
           $ref: '#/components/responses/bicimadArray'
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
@@ -118,8 +118,8 @@ paths:
                   error:
                     type: string
                 example:
-                  error: Some parameters are wrong
-  '/movements/time':
+                  error: Date parameter is invalid
+  /movements/time:
     get:
       summary: Get movements information
       description: Obtain all movements within a certain day. Specify origin and destination stations and a travel time. Use *gt* parameter to search for movements lasting more or less than the specified travel time
@@ -146,9 +146,9 @@ paths:
           type: boolean
           default: false
       responses:
-        '200':
+        "200":
           $ref: '#/components/responses/bicimadArray'
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
@@ -159,7 +159,7 @@ paths:
                     type: string
                 example:
                   error: Some parameters are wrong
-  '/new':
+  /new:
     post:
       security:
       - basicAuth: []
@@ -173,7 +173,7 @@ paths:
           application/json:
             schema:
               example:
-                Fecha: '20/03/2019'
+                Fecha: '03/06/2019'
                 ageRange: 5
                 idplug_base: 23
                 idplug_station: 154
@@ -194,7 +194,8 @@ paths:
               properties:
                 Fecha:
                   type: string
-                  format: 'DD/MM/YYY'
+                  format: date
+                  pattern: '^((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})$'
                 ageRange:
                   type: number
                   minimum: 0
@@ -234,8 +235,8 @@ paths:
                 properties:
                   error:
                     type: string
-        '401':
-          description: Unauthorized
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -245,7 +246,7 @@ paths:
                 properties:
                   error:
                     type: string
-  '/time/update':
+  /time/update:
     put:
       summary: Update travel time
       description: Update travel time in seconds for a specific document
@@ -255,14 +256,14 @@ paths:
           application/json:
             schema:
               example:
-                Fecha: '20/03/2020'
-                Fichero: 0
+                Fecha: '03/06/2019'
+                Fichero: 201906
                 ageRange: 5
                 idplug_base: 23
                 idplug_station: 154
                 idunplug_base: 17
                 idunplug_station: 160
-                travel_time: 1000
+                travel_time: 763
                 user_type: 1
               type: object
               required:
@@ -278,7 +279,8 @@ paths:
               properties:
                 Fecha:
                   type: string
-                  format: 'DD/MM/YYY'
+                  format: date
+                  pattern: '^((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})$'
                 Fichero:
                   type: number
                   minimum: 0
@@ -347,7 +349,8 @@ components:
       schema:
         example: '03/06/2019'
         type: string
-        format: 'DD/MM/YYYY'
+        format: date
+        pattern: '^((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})$'
     from:
       name: from
       in: query
@@ -410,7 +413,7 @@ components:
               properties:
                 Fecha:
                   type: string
-                  format: DD/MM/YYY
+                  format: 'DD/MM/YYYY'
                 Fichero:
                   type: number
                   minimum: 0
@@ -445,8 +448,8 @@ components:
         application/json:
           schema:
             example:
-              Fecha: '20/03/2020'
-              Fichero: 0
+              Fecha: '03/06/2019'
+              Fichero: 201906
               ageRange: 5
               idplug_base: 23
               idplug_station: 154
@@ -458,7 +461,7 @@ components:
             properties:
               Fecha:
                 type: string
-                format: 'DD/MM/YYY'
+                format: 'DD/MM/YYYY'
               Fichero:
                 type: number
                 minimum: 0
@@ -494,19 +497,19 @@ components:
           schema:
             type: object
             example:
-              Fecha: '20/03/2020'
-              Fichero: 0
+              Fecha: '03/06/2019'
+              Fichero: 201906
               ageRange: 5
               idplug_base: 23
               idplug_station: 154
               idunplug_base: 17
               idunplug_station: 160
-              travel_time: 1000
+              travel_time: 763
               user_type: 1
             properties:
               Fecha:
                 type: string
-                format: 'DD/MM/YYY'
+                format: 'DD/MM/YYYY'
               Fichero:
                 type: number
                 minimum: 0
