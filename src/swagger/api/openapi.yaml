@@ -20,7 +20,7 @@ paths:
       summary: Get number of dates
       description: Obtain the number of available dates and also the first and last dates
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -54,7 +54,7 @@ paths:
       summary: Get stations identifiers
       description: Obtain all the origin/destination stations identifiers
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -86,7 +86,7 @@ paths:
                           items:
                             type: integer
                             minimum: 1
-        "404":
+        '404':
           description: Not Found
           content:
             application/json:
@@ -108,9 +108,9 @@ paths:
       - $ref: '#/components/parameters/from'
       - $ref: '#/components/parameters/to'
       responses:
-        "200":
+        '200':
           $ref: '#/components/responses/bicimadArray'
-        "400":
+        '400':
           description: Bad Request
           content:
             application/json:
