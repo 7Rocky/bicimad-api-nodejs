@@ -10,7 +10,7 @@ info:
     name: ISC
     url: 'https://opensource.org/licenses/ISC'
 servers:
-- url: 'https://rockyPython.mybluemix.net/bicimad-api/v1.0'
+- url: 'https://rockypython.azurewebsites.net/bicimad-api/v1.0/'
 tags:
 - name: admins
   description: Secured Admin-only calls

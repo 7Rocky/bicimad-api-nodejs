@@ -1,38 +1,26 @@
 {
   "author": "Rocky",
   "dependencies": {
-    "@cloudant/cloudant": "^4.2.4",
-    "cfenv": "^1.0.x",
     "cors": "^2.8.5",
     "express": "^4.15.x",
-    "node-cache": "^5.1.0",
     "oas3-tools": "^2.0.2"
   },
   "description": "rockyPython",
-  "devDependencies": {
-    "axios": "^0.19.2",
-    "chai": "^4.2.0",
-    "mocha": "^7.1.0",
-    "nodemon": "^2.0.2",
-    "query-string": "^6.11.1"
-  },
   "engines": {
     "node": "12.16.1",
     "npm": "6.14.2"
   },
   "license": "ISC",
   "main": "src/index.js",
-  "name": "rockypython",
+  "name": "rockypythondocs",
   "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/7Rocky/bicimad-api-nodejs.git"
   },
   "scripts": {
-    "dev": "nodemon src/index.js",
     "prestart": "npm install --production",
-    "start": "node src/index.js",
-    "test": "mocha --recursive --exit"
+    "start": "node src/index.js"
   },
   "version": "0.1.1"
 }
