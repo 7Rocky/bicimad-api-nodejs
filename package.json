@@ -8,7 +8,7 @@
     "node-cache": "^5.1.0",
     "oas3-tools": "^2.0.2"
   },
-  "description": "rockyPython",
+  "description": "rockyJS",
   "devDependencies": {
     "axios": "^0.19.2",
     "chai": "^4.2.0",
@@ -22,7 +22,7 @@
   },
   "license": "ISC",
   "main": "src/index.js",
-  "name": "rockypython",
+  "name": "rockyjs",
   "private": false,
   "repository": {
     "type": "git",
