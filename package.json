@@ -1,8 +1,11 @@
 {
   "author": "Rocky",
   "dependencies": {
+    "@cloudant/cloudant": "^4.2.4",
+    "cfenv": "^1.2.2",
     "cors": "^2.8.5",
     "express": "^4.15.x",
+    "node-cache": "^5.1.0",
     "oas3-tools": "^2.0.2"
   },
   "description": "rockyJS",
