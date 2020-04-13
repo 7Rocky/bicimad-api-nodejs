@@ -1,6 +1,6 @@
 # Bicimad API - Node.js
 
-This application presents a simple API with different endpoints and methods supported. Go to <https://rockyPython.mybluemix.net/docs> to see the API documentation.
+This application presents a simple API with different endpoints and methods supported. Go to <https://rockyJS.mybluemix.net/docs> to see the API documentation.
 
 ## Run the app locally
 
