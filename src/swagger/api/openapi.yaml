@@ -10,7 +10,7 @@ info:
     name: ISC
     url: 'https://opensource.org/licenses/ISC'
 servers:
-- url: 'https://rockyPython.mybluemix.net/bicimad-api/v1.0'
+- url: 'https://rockypython.azurewebsites.net/bicimad-api/v1.0/'
 tags:
 - name: admins
   description: Secured Admin-only calls
@@ -20,7 +20,7 @@ paths:
       summary: Get number of dates
       description: Obtain the number of available dates and also the first and last dates
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -54,7 +54,7 @@ paths:
       summary: Get stations identifiers
       description: Obtain all the origin/destination stations identifiers
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -86,7 +86,7 @@ paths:
                           items:
                             type: integer
                             minimum: 1
-        "404":
+        '404':
           description: Not Found
           content:
             application/json:
@@ -108,9 +108,9 @@ paths:
       - $ref: '#/components/parameters/from'
       - $ref: '#/components/parameters/to'
       responses:
-        "200":
+        '200':
           $ref: '#/components/responses/bicimadArray'
-        "400":
+        '400':
           description: Bad Request
           content:
             application/json:
@@ -124,7 +124,10 @@ paths:
   /movements/time:
     get:
       summary: Get movements information
-      description: Obtain all movements within a certain day. Specify origin and destination stations and a travel time. Use *gt* parameter to search for movements lasting more or less than the specified travel time
+      description: |
+        Obtain all movements within a certain day. Specify
+        origin and destination stations and a travel time. Use *gt* parameter
+        to search for movements lasting more or less than the specified travel time
       parameters:
       - $ref: '#/components/parameters/date'
       - $ref: '#/components/parameters/from_time'
@@ -168,7 +171,9 @@ paths:
       tags:
       - admins
       summary: Adds a new document to the database
-      description: Adds a new document to the database, only if the user is authenticated correctly. There is no need to specify *Fichero* field, it will be set to zero anyway
+      description: |
+        Adds a new document to the database, only if the user is authenticated correctly.
+        There is no need to specify *Fichero* field, it will be set to zero anyway
       requestBody:
         description: Document to add
         content:
@@ -237,8 +242,8 @@ paths:
                 properties:
                   error:
                     type: string
-        '403':
-          description: Forbidden
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:

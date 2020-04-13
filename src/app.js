@@ -22,8 +22,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(swaggerUi.serveStaticContent());
 
-app.use(require('./routes/bicimad.routes'));
-
 new express_openapi_validator.OpenApiValidator({ apiSpec: definitionPath })
   .install(app)
   .then(() => {
