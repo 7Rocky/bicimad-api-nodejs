@@ -2,23 +2,23 @@
   "author": "Rocky",
   "dependencies": {
     "@cloudant/cloudant": "^4.2.4",
-    "cfenv": "^1.2.2",
+    "cfenv": "^1.2.3",
     "cors": "^2.8.5",
     "express": "^4.15.x",
-    "node-cache": "^5.1.0",
+    "node-cache": "^5.1.2",
     "oas3-tools": "^2.0.2"
   },
   "description": "rockyJS",
   "devDependencies": {
     "axios": "^0.19.2",
     "chai": "^4.2.0",
-    "mocha": "^7.1.0",
-    "nodemon": "^2.0.2",
-    "query-string": "^6.11.1"
+    "mocha": "^8.1.0",
+    "nodemon": "^2.0.4",
+    "query-string": "^6.13.1"
   },
   "engines": {
-    "node": "12.16.1",
-    "npm": "6.14.2"
+    "node": "12.16.3",
+    "npm": "6.14.7"
   },
   "license": "ISC",
   "main": "src/index.js",
